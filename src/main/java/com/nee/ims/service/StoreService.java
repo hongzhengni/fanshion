@@ -1,17 +1,5 @@
 package com.nee.ims.service;
 
-import static com.nee.ims.common.constant.ErrorCodeEnum.*;
-
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nee.ims.common.A0Json;
 import com.nee.ims.common.Request;
@@ -24,11 +12,21 @@ import com.nee.ims.data.entities.*;
 import com.nee.ims.uitls.DateUtils;
 import com.nee.ims.uitls.MD5Encrypt;
 import com.nee.ims.uitls.StringUtils;
-
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.asyncsql.AsyncSQLClient;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
+import static com.nee.ims.common.constant.ErrorCodeEnum.*;
 
 /**
  */
@@ -684,6 +682,10 @@ public class StoreService {
 
         if (StringUtils.isBlank(params.getString("token"))) {
             throw new BusinessException("token can not be null", ErrorCodeEnum.NO_PARAM);
+        }
+        String categoryId = params.getString("categoryId");
+        if (StringUtils.isBlank(categoryId)) {
+            throw new BusinessException("category can not be null", ErrorCodeEnum.NO_PARAM);
         }
         String productId = params.getString("productId");
         if (StringUtils.isBlank(productId)) {

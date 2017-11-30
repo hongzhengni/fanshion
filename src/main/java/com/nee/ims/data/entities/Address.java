@@ -45,6 +45,7 @@ public class Address extends DBTableDataBean
 	private String fullAddress;
 	private String contactName;
 	private String contactMobile;
+	private String logistics;
 	private Integer isDefault;
 	private Integer isDelete;
 	private String createTime;
@@ -150,6 +151,15 @@ public class Address extends DBTableDataBean
 	public void setContactMobile(String contactMobile) {
 		this.contactMobile = contactMobile;
 	}
+
+	public String getLogistics() {
+		return logistics;
+	}
+
+	public void setLogistics(String logistics) {
+		this.logistics = logistics;
+	}
+
 	public Integer getIsDefault() {
 		return isDefault;
 	}
