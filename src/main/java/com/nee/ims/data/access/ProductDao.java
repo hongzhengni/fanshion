@@ -41,5 +41,7 @@ public interface ProductDao extends PagingAndSortingRepository<Product, String> 
     Product findFirstByStoreId(String storeId, Sort sort);
 
     Product findFirstByProductCode(String productCode);
+
+    Iterable<Product> findAllByCategory(String categoryId);
 }
 

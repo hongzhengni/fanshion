@@ -687,33 +687,37 @@ public class StoreService {
         if (StringUtils.isBlank(categoryId)) {
             throw new BusinessException("category can not be null", ErrorCodeEnum.NO_PARAM);
         }
-        String productId = params.getString("productId");
-        if (StringUtils.isBlank(productId)) {
-            throw new BusinessException("product can not be null", ErrorCodeEnum.NO_PARAM);
+        String toCategoryId = params.getString("toCategoryId");
+        if (StringUtils.isBlank(toCategoryId)) {
+            throw new BusinessException("toCategoryId can not be null", ErrorCodeEnum.NO_PARAM);
         }
+
         User user = userService.findUserByToken(params.getString("token"));
         Store store = this.getStoreByUserId(user.getUserId());
 
-        Product product = productDao.findOne(productId);
+        Iterable<Product> products = productDao.findAllByCategory(categoryId);
 
-        if (product == null) {
-            throw new BusinessException("product not found", DATA_NOT_EXIST);
-        }
-        product.setProductId(StringUtils.uuid());
-        product.setCreateTime(new Date());
-        product.setUpdateTime(new Date());
-        product.setUserId(user.getUserId());
-        product.setStoreId(store.getStoreId());
-        productDao.save(product);
+        products.forEach(single -> {
 
-        Iterable<ProductPicture> pictures = productPictureDao.findAllByProductId(productId);
-        pictures.forEach(picture -> {
-            picture.setPictureId(StringUtils.uuid());
-            picture.setProductId(product.getProductId());
-            picture.setCreateTime(new Date());
-            picture.setUpdateTime(new Date());
 
-            productPictureDao.save(picture);
+            Product product = new Product();
+            product.setProductId(StringUtils.uuid());
+            product.setCreateTime(new Date());
+            product.setUpdateTime(new Date());
+            product.setUserId(user.getUserId());
+            product.setStoreId(store.getStoreId());
+            product.setCategory(toCategoryId);
+            productDao.save(product);
+
+            Iterable<ProductPicture> pictures = productPictureDao.findAllByProductId(single.getProductId());
+            pictures.forEach(picture -> {
+                picture.setPictureId(StringUtils.uuid());
+                picture.setProductId(product.getProductId());
+                picture.setCreateTime(new Date());
+                picture.setUpdateTime(new Date());
+
+                productPictureDao.save(picture);
+            });
         });
 
         routingContext.response().putHeader("content-type", "application/json; charset=utf-8")

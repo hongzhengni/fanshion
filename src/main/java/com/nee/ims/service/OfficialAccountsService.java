@@ -380,7 +380,12 @@ public class OfficialAccountsService {
 
         page.forEach(single -> {
             ProductPicture productPicture = productPictureDao.findFirstByProductId(single.getProductId());
-            single.setPictureUrl(productPicture.getPictureUrl());
+
+            if (productPermissionDao.findOneByProductAndUserId(single, user.getUserId()) != null) {
+                single.setHasPermission(true);
+            }
+            if (productPicture != null)
+                single.setPictureUrl(productPicture.getPictureUrl());
         });
 
         routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
@@ -434,6 +439,9 @@ public class OfficialAccountsService {
 
         iterable.forEach(single -> {
             Store store = storeDao.findOne(single.getStoreId());
+            if (store == null) {
+               return;
+            }
             User user1 = userDao.findOne(store.getUserId());
             if (user1 != null) {
                 store.setUserName(user1.getUserName());

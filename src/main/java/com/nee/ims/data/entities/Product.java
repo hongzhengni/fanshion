@@ -59,6 +59,7 @@ public class Product extends DBTableDataBean
 	private String season;
 	private String introduction;
 	private String importFunction;
+	private String visible;
 	private Integer status;
 	private Integer isDelete;
 	private Date createTime;
@@ -88,6 +89,7 @@ public class Product extends DBTableDataBean
 		season = null;
 		introduction = null;
 		importFunction = null;
+		visible = null;
 		status = null;
 		isDelete = null;
 		createTime = null;
@@ -237,6 +239,15 @@ public class Product extends DBTableDataBean
 	public void setImportFunction(String importFunction) {
 		this.importFunction = importFunction;
 	}
+
+	public String getVisible() {
+		return visible;
+	}
+
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
 	public Integer getStatus() {
 		return status;
 	}
@@ -290,6 +301,8 @@ public class Product extends DBTableDataBean
 	private Map<String, Object> storeInfo;
 	@Transient
 	private Integer days;
+	@Transient
+	private Boolean hasPermission = false;
 
 
 	public String getStartDate() {
@@ -386,5 +399,13 @@ public class Product extends DBTableDataBean
 
 	public void setDays(Integer days) {
 		this.days = days;
+	}
+
+	public Boolean getHasPermission() {
+		return hasPermission;
+	}
+
+	public void setHasPermission(Boolean hasPermission) {
+		this.hasPermission = hasPermission;
 	}
 }

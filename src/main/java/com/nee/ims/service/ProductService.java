@@ -946,6 +946,11 @@ public class ProductService {
                 .end(A0Json.encode(new Result.Builder().setData(map).build()));
     }
 
+    private void configAllVisible(RoutingContext routingContext) {
+
+
+    }
+
     /**
      * 查询群发商品
      *
@@ -1040,6 +1045,8 @@ public class ProductService {
             querySize(routingContext);
         } else if (StringUtils.equals(method, "config.product.visible")) {
             configProductVisible(routingContext);
+        } else if (StringUtils.equals(method, "config.all.visible")) {
+            configAllVisible(routingContext);
         } else if (StringUtils.equals(method, "delete.product.visible")) {
             deleteProductVisible(routingContext);
         } else if (StringUtils.equals(method, "mass.send.product")) {
@@ -1050,7 +1057,6 @@ public class ProductService {
             throw new BusinessException(ErrorCodeEnum.REQUEST_ERROR);
         }
     }
-
 
 
 
