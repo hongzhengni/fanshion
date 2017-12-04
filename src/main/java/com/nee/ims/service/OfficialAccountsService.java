@@ -379,17 +379,26 @@ public class OfficialAccountsService {
         }, pageRequest);
 
         page.forEach(single -> {
-            ProductPicture productPicture = productPictureDao.findFirstByProductId(single.getProductId());
+            getVisible(single, user.getUserId());
 
-            if (productPermissionDao.findOneByProductAndUserId(single, user.getUserId()) != null) {
-                single.setHasPermission(true);
-            }
+            ProductPicture productPicture = productPictureDao.findFirstByProductId(single.getProductId());
             if (productPicture != null)
                 single.setPictureUrl(productPicture.getPictureUrl());
         });
 
         routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
                 .end(A0Json.encode(new Result.Builder().setData(page).build()));
+    }
+
+    private void getVisible(Product single, String userId) {
+        if (StringUtils.equals("1", single.getVisible())) {
+            single.setHasPermission(true);
+        } else {
+            ProductPermission pp = productPermissionDao.findOneByProductAndUserId(single, userId);
+            if (pp != null && new Date().compareTo(pp.getValidateTime()) <= 0) {
+                single.setHasPermission(true);
+            }
+        }
     }
 
     /**

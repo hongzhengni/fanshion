@@ -720,12 +720,13 @@ public class ProductService {
         product.setProductId(productId);
 
         ProductPermission pp = productPermissionDao.findOneByProductAndUserId(product, user.getUserId());
-        if (pp == null || new Date().compareTo(pp.getValidateTime()) > 0) {
-            throw new BusinessException(ErrorCodeEnum.NO_PRODUCT_PERMISSION);
-        }
+
         final Product productDB = productDao.findOne(productId);
         if (productDB == null) {
             throw new BusinessException("product is not exists", DATA_NOT_EXIST);
+        }
+        if (StringUtils.equals("2", productDB.getVisible()) && (pp == null || new Date().compareTo(pp.getValidateTime()) > 0)) {
+            throw new BusinessException(ErrorCodeEnum.NO_PRODUCT_PERMISSION);
         }
 
         productDB.setPictureUrls(new ArrayList<>());
