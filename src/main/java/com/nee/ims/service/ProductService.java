@@ -46,7 +46,7 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
     @Autowired
-    private  StoreDao storeDao;
+    private StoreDao storeDao;
     @Autowired
     private ProductPictureDao productPictureDao;
     @Autowired
@@ -75,7 +75,7 @@ public class ProductService {
      *
      * @param routingContext
      */
-     void createProduct(RoutingContext routingContext) {
+    void createProduct(RoutingContext routingContext) {
 
         Request<ProductVO> request = A0Json.decodeValue(routingContext.getBodyAsString(), new TypeReference<Request<ProductVO>>() {
         });
@@ -947,8 +947,25 @@ public class ProductService {
     }
 
     private void configAllVisible(RoutingContext routingContext) {
+        JsonObject params = routingContext.getBodyAsJson().getJsonObject("params");
+        String token = params.getString("token");
 
+        userService.findUserByToken(token);
 
+        JsonArray productIds = params.getJsonArray("productIds");
+        String visible = params.getString("visible");
+        if (StringUtils.isBlank(visible) || !visible.equals("1") || !visible.equals("2")) {
+            throw new BusinessException(ERROR_PARAM);
+        }
+
+        productIds.forEach(productId -> {
+            Product productDB = productDao.findOne(productId.toString());
+            productDB.setVisible(visible);
+            productDao.save(productDB);
+        });
+
+        routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
+                .end(A0Json.encode(new Result.Builder().build()));
     }
 
     /**
@@ -989,7 +1006,6 @@ public class ProductService {
                 .end(A0Json.encode(new Result.Builder().setData(iterable).build()));
 
     }
-
 
 
     /**
@@ -1057,7 +1073,6 @@ public class ProductService {
             throw new BusinessException(ErrorCodeEnum.REQUEST_ERROR);
         }
     }
-
 
 
 }
