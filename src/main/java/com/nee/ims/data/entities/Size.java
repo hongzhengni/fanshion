@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 
 /**
@@ -40,8 +41,8 @@ public class Size extends DBTableDataBean
 	private String sizeName;
 	private String groupName;
 	private Integer isDelete;
-	private String createTime;
-	private String updateTime;
+	private Date createTime;
+	private Date updateTime;
 
 	public Size() {
 		super();
@@ -101,18 +102,18 @@ public class Size extends DBTableDataBean
 	public void setIsDelete(Integer isDelete) {
 		this.isDelete = isDelete;
 	}
-	public String getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getUpdateTime() {
+	public Date getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(String updateTime) {
+	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
 }

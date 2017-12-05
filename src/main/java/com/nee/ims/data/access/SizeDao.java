@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by heikki on 17/8/20.
  */
@@ -15,5 +17,7 @@ public interface SizeDao extends CrudRepository<Size, String> {
     Iterable<Size> findByStoreId(String storeId, Sort sort);
 
     Size findOneByStoreIdAndSizeNameAndGroupName(String storeId, String sizeName, String groupName);
+
+    List<Size> findOneByStoreIdAndGroupName(String storeId, String groupName, Sort sort);
 }
 

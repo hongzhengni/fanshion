@@ -103,9 +103,47 @@ public class ProductService {
         saveProductAndRemember(productVO, product);
 
         saveSinceColor(product);
+        saveSinceSize(product);
 
         routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
                 .end(A0Json.encode(new Result.Builder().build()));
+
+    }
+
+    /**
+     * since product size
+     *
+     * @param product product
+     */
+    private void saveSinceSize(Product product) {
+
+        String sizeStr = product.getSize();
+        if (StringUtils.isBlank(sizeStr)) {
+            return;
+        }
+
+        String sizeNames[] = sizeStr.split(",");
+        for (String sizeName : sizeNames) {
+            if (sizeDao.findOneByStoreIdAndSizeNameAndGroupName(product.getStoreId(), sizeName, "最近使用的") != null) {
+                continue;
+            }
+
+            Size size = new Size();
+            size.setSizeId(StringUtils.uuid());
+            size.setSizeName(sizeName);
+            size.setCreateTime(new Date());
+            size.setUpdateTime(new Date());
+            size.setStoreId(product.getStoreId());
+            size.setGroupName("最近使用的");
+            size.setIsDelete(CommonConstant.DELETE.NO);
+            sizeDao.save(size);
+        }
+
+        List<Size> sizes = sizeDao.findOneByStoreIdAndGroupName(product.getStoreId(), "最近使用的",
+                new Sort(Sort.Direction.DESC, "createTime"));
+        for (int i = 4; i < sizes.size(); i++) {
+            sizeDao.save(sizes.get(i));
+        }
 
     }
 
@@ -123,17 +161,24 @@ public class ProductService {
 
         String colorNames[] = colorStr.split(",");
         for (String colorName : colorNames) {
+            if (colorDao.findOneByStoreIdAndColorNameAndGroupName(product.getStoreId(), colorName, "最近使用的") != null) {
+                continue;
+            }
             Color color = new Color();
             color.setColorId(StringUtils.uuid());
             color.setColorName(colorName);
             color.setCreateTime(new Date());
             color.setUpdateTime(new Date());
             color.setStoreId(product.getStoreId());
-            color.setGroupName("最近使用的颜色");
+            color.setGroupName("最近使用的");
             color.setIsDelete(CommonConstant.DELETE.NO);
             colorDao.save(color);
         }
-
+        List<Color> colors = colorDao.findOneByStoreIdAndGroupName(product.getStoreId(), "最近使用的",
+                new Sort(Sort.Direction.DESC, "createTime"));
+        for (int i = 4; i < colors.size(); i++) {
+            colorDao.save(colors.get(i));
+        }
     }
 
     /**
