@@ -75,7 +75,7 @@ public class ProductService {
      *
      * @param routingContext
      */
-    void createProduct(RoutingContext routingContext) {
+    private void createProduct(RoutingContext routingContext) {
 
         Request<ProductVO> request = A0Json.decodeValue(routingContext.getBodyAsString(), new TypeReference<Request<ProductVO>>() {
         });
@@ -102,8 +102,29 @@ public class ProductService {
 
         saveProductAndRemember(productVO, product);
 
+        saveSinceColor(product);
+
         routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
                 .end(A0Json.encode(new Result.Builder().build()));
+
+    }
+
+    /**
+     * since product color
+     *
+     * @param product product
+     */
+    private void saveSinceColor(Product product) {
+
+        String colorStr = product.getColor();
+        if (StringUtils.isBlank(colorStr)) {
+            return;
+        }
+
+        String colorNames[] = colorStr.split(",");
+        for (String colorName : colorNames) {
+                    
+        }
 
     }
 

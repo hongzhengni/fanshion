@@ -683,10 +683,13 @@ public class StoreService {
         if (StringUtils.isBlank(params.getString("token"))) {
             throw new BusinessException("token can not be null", ErrorCodeEnum.NO_PARAM);
         }
-        String categoryId = params.getString("categoryId");
+        /*String categoryId = params.getString("categoryId");
         if (StringUtils.isBlank(categoryId)) {
             throw new BusinessException("category can not be null", ErrorCodeEnum.NO_PARAM);
-        }
+        }*/
+
+        JsonArray productIds = params.getJsonArray("productIds");
+
         String toCategoryId = params.getString("toCategoryId");
         if (StringUtils.isBlank(toCategoryId)) {
             throw new BusinessException("toCategoryId can not be null", ErrorCodeEnum.NO_PARAM);
@@ -695,12 +698,11 @@ public class StoreService {
         User user = userService.findUserByToken(params.getString("token"));
         Store store = this.getStoreByUserId(user.getUserId());
 
-        Iterable<Product> products = productDao.findAllByCategory(categoryId);
-
-        products.forEach(single -> {
-
-
-            Product product = new Product();
+        productIds.forEach(productId -> {
+            Product product = productDao.findOne((String) productId);
+            if (product == null) {
+                return;
+            }
             product.setProductId(StringUtils.uuid());
             product.setCreateTime(new Date());
             product.setUpdateTime(new Date());
@@ -709,7 +711,7 @@ public class StoreService {
             product.setCategory(toCategoryId);
             productDao.save(product);
 
-            Iterable<ProductPicture> pictures = productPictureDao.findAllByProductId(single.getProductId());
+            Iterable<ProductPicture> pictures = productPictureDao.findAllByProductId(product.getProductId());
             pictures.forEach(picture -> {
                 picture.setPictureId(StringUtils.uuid());
                 picture.setProductId(product.getProductId());
