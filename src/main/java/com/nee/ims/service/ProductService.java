@@ -123,7 +123,15 @@ public class ProductService {
 
         String colorNames[] = colorStr.split(",");
         for (String colorName : colorNames) {
-                    
+            Color color = new Color();
+            color.setColorId(StringUtils.uuid());
+            color.setColorName(colorName);
+            color.setCreateTime(new Date());
+            color.setUpdateTime(new Date());
+            color.setStoreId(product.getStoreId());
+            color.setGroupName("最近使用的颜色");
+            color.setIsDelete(CommonConstant.DELETE.NO);
+            colorDao.save(color);
         }
 
     }
