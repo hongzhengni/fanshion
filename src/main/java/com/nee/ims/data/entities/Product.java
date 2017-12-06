@@ -303,6 +303,8 @@ public class Product extends DBTableDataBean
 	private Integer days;
 	@Transient
 	private Boolean hasPermission = false;
+	@Transient
+	private int userType;
 
 
 	public String getStartDate() {
@@ -407,5 +409,13 @@ public class Product extends DBTableDataBean
 
 	public void setHasPermission(Boolean hasPermission) {
 		this.hasPermission = hasPermission;
+	}
+
+	public int getUserType() {
+		return userType;
+	}
+
+	public void setUserType(int userType) {
+		this.userType = userType;
 	}
 }

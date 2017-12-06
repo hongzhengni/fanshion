@@ -404,7 +404,7 @@ public class StoreService {
                     user.setUserName(store1.getStoreName());
                     user.setAddress(store1.getAddress());
                 } else {
-                    Address address = addressDao.findOneByUserId(user.getUserId());
+                    Address address = addressDao.findFirstByUserId(user.getUserId());
                     if (address != null) {
                         user.setAddress(address.getAddress());
                     }
@@ -549,7 +549,7 @@ public class StoreService {
             user.setUserName(store1.getStoreName());
             addressStr = store1.getAddress();
         } else {
-            Address address = addressDao.findOneByUserId(user.getUserId());
+            Address address = addressDao.findFirstByUserId(user.getUserId());
             if (address != null) {
                 addressStr = address.getAddress();
             }
@@ -711,7 +711,7 @@ public class StoreService {
             product.setCategory(toCategoryId);
             productDao.save(product);
 
-            Iterable<ProductPicture> pictures = productPictureDao.findAllByProductId(product.getProductId());
+            Iterable<ProductPicture> pictures = productPictureDao.findAllByProductId((String) productId);
             pictures.forEach(picture -> {
                 picture.setPictureId(StringUtils.uuid());
                 picture.setProductId(product.getProductId());

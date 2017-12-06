@@ -62,6 +62,8 @@ public class ProductService {
     @Autowired
     private ColorDao colorDao;
     @Autowired
+    private UserDao userDao;
+    @Autowired
     private SizeDao sizeDao;
     @Autowired
     private SendProductDao sendProductDao;
@@ -858,6 +860,10 @@ public class ProductService {
             }
             productDB.setStoreInfo(map);
         }
+        User productUser = userDao.findOne(productDB.getUserId());
+        if (productUser != null) {
+            productDB.setUserType(productUser.getUserType());
+        }
 
         routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
                 .end(A0Json.encode(new Result.Builder().setData(productDB).build()));
@@ -1029,7 +1035,7 @@ public class ProductService {
 
         JsonArray productIds = params.getJsonArray("productIds");
         String visible = params.getString("visible");
-        if (StringUtils.isBlank(visible) || !visible.equals("1") || !visible.equals("2")) {
+        if (StringUtils.isBlank(visible) || (!visible.equals("1") && !visible.equals("2"))) {
             throw new BusinessException(ERROR_PARAM);
         }
 
@@ -1074,6 +1080,8 @@ public class ProductService {
                     pictureUrls.add(p.getPictureUrl());
                 });
                 product.setPictureUrls(pictureUrls);
+                product.setHasPermission(true);
+
             }
         });
 

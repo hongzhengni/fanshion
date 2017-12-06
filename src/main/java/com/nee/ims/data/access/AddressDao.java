@@ -23,6 +23,6 @@ public interface AddressDao extends CrudRepository<Address, String> {
     @Query("update Address set isDefault = 0 where userId = ?1") //删除的语句
     void updateByUserId(String userId);
 
-    Address findOneByUserId(String userId);
+    Address findFirstByUserId(String userId);
 }
 
